@@ -2,6 +2,29 @@ import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import Bus from "../Utils/Utils";
 import "./SeatLayout.css";
+
+const Grid = ({ children }) => (
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(4, 1fr)",
+      gridGap: "10px",
+    }}>
+    {children}
+  </div>
+);
+
+const Seat = ({ seat }) => (
+  <div
+    style={{
+      backgroundColor: seat.seatType === "sleeper" ? "blue" : "green",
+      gridColumn: seat.seatType === "sleeper" ? `span 2` : `span 1`,
+      height: "50px",
+    }}>
+    {seat.seatId}
+  </div>
+);
+
 const SeatLayout = ({ seatState }) => {
   // const [bus, setBus] = useState(Bus[0].seat);
   const [bus, setBus] = useState([...seatState]);
@@ -30,21 +53,11 @@ const SeatLayout = ({ seatState }) => {
 
   return (
     <>
-      <div
-        style={{
-          display: "grid",
-        }}
-        className="layout">
-        {bus?.map((seat) => (
-          <div
-            style={{ width: "50px" }}
-            key={seat.id}
-            className={`seats ${seat.seatType}`}>
-            {seat.seatId}
-            {console.log(bus, "***")}
-          </div>
+      <Grid>
+        {bus.map((seat) => (
+          <Seat key={seat.id} seat={seat} />
         ))}
-      </div>
+      </Grid>
       <button onClick={removeDuplicates}>fix me</button>
     </>
   );

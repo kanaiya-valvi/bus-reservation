@@ -5,6 +5,9 @@ const SeatMaker = ({ onSeatChange, columns, rows }) => {
   const [column, setColumn] = useState(0);
   const [seats, setSeats] = useState(null);
 
+  // const seatId = seats?.map((seat) => seat.seatId);
+  // console.log(seatId);
+
   const changeSeatDetails = (id, seatId) => {
     const seat = seats.map((list) => {
       if (list.id == id) {
@@ -44,7 +47,7 @@ const SeatMaker = ({ onSeatChange, columns, rows }) => {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: `repeat(${column}, 1fr)`,
+          gridTemplateColumns: `repeat(${column}, minmax(50px,100px))`,
           gridGap: "10px",
           transform: "translate(90deg)",
           maxWidth: "200px",

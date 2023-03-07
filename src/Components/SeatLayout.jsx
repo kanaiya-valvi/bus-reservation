@@ -1,14 +1,17 @@
-import _ from "lodash";
+import _, { transform } from "lodash";
 import React, { useEffect, useState } from "react";
-import Bus from "../Utils/Utils";
 import "./SeatLayout.css";
 
-const Grid = ({ children }) => (
+const Grid = ({ children, column, row }) => (
   <div
     style={{
       display: "grid",
-      gridTemplateColumns: "repeat(4, 1fr)",
+      gridTemplateColumns: `repeat(${column}, 1fr)`,
+      gridTemplateRows: `repeat(${row}, 50px)`,
       gridGap: "10px",
+      transform: "translate(90deg)",
+      maxWidth: "200px",
+      maxWidth: "min-content",
     }}>
     {children}
   </div>
@@ -17,16 +20,19 @@ const Grid = ({ children }) => (
 const Seat = ({ seat }) => (
   <div
     style={{
-      backgroundColor: seat.seatType === "sleeper" ? "blue" : "green",
+      backgroundColor: seat.seatType === "sleeper" ? "#3bc9db" : "#99e9f2",
       gridColumn: seat.seatType === "sleeper" ? `span 2` : `span 1`,
-      height: "50px",
+      // height: "50px",
+      minHeight: "50px",
+      minWidth: "50px",
     }}>
     {seat.seatId}
   </div>
 );
 
-const SeatLayout = ({ seatState }) => {
+const SeatLayout = ({ seatState, column, row }) => {
   // const [bus, setBus] = useState(Bus[0].seat);
+  console.log(column, row);
   const [bus, setBus] = useState([...seatState]);
   console.log(seatState);
   // useEffect(() => {
@@ -53,7 +59,7 @@ const SeatLayout = ({ seatState }) => {
 
   return (
     <>
-      <Grid>
+      <Grid row={row} column={column}>
         {bus.map((seat) => (
           <Seat key={seat.id} seat={seat} />
         ))}

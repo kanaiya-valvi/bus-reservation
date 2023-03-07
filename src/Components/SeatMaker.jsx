@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const SeatMaker = ({ onSeatChange }) => {
+const SeatMaker = ({ onSeatChange, columns, rows }) => {
   const [row, setRow] = useState(0);
   const [column, setColumn] = useState(0);
   const [seats, setSeats] = useState(null);
@@ -19,6 +19,8 @@ const SeatMaker = ({ onSeatChange }) => {
 
   const addSeatHandler = () => {
     const numberOfSeat = row * column;
+    columns(column);
+    rows(row);
     const seat = [];
     for (let i = 0; i < numberOfSeat; i++) {
       seat.push({ id: i, seatId: "", seatType: "seater" });
@@ -39,27 +41,34 @@ const SeatMaker = ({ onSeatChange }) => {
         <input type="number" onChange={(e) => setRow(e.target.value)} />
       </div>
       <button onClick={addSeatHandler}>add seat</button>
-      <br />
-      {seats !== null &&
-        seats.map((item, index) => {
-          if (count === parseInt(column)) {
-            count = 1;
-          } else {
-            count = count + 1;
-          }
-          return (
-            <>
-              <input
-                type="text"
-                key={index}
-                onChange={(e) => {
-                  changeSeatDetails(item.id, e.target.value);
-                }}
-              />
-              {count === parseInt(column) && <p key={index * 5}></p>}
-            </>
-          );
-        })}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: `repeat(${column}, 1fr)`,
+          gridGap: "10px",
+          transform: "translate(90deg)",
+          maxWidth: "200px",
+        }}>
+        {seats !== null &&
+          seats.map((item) => {
+            if (count === parseInt(column)) {
+              count = 1;
+            } else {
+              count = count + 1;
+            }
+            return (
+              <>
+                <input
+                  type="text"
+                  key={item.id}
+                  onChange={(e) => {
+                    changeSeatDetails(item.id, e.target.value);
+                  }}
+                />
+              </>
+            );
+          })}
+      </div>
       <button onClick={showSeats}>show</button>
     </div>
   );

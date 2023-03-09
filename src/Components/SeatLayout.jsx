@@ -22,7 +22,6 @@ const Seat = ({ seat }) => (
     style={{
       backgroundColor: seat.seatType === "sleeper" ? "#3bc9db" : "#99e9f2",
       gridColumn: seat.seatType === "sleeper" ? `span 2` : `span 1`,
-      // height: "50px",
       minHeight: "50px",
       minWidth: "50px",
     }}>
@@ -30,34 +29,12 @@ const Seat = ({ seat }) => (
   </div>
 );
 
-const SeatLayout = ({ seatState, column, row }) => {  
-  console.log(column, row);
+const SeatLayout = ({ seatState, column, row }) => {
   const [bus, setBus] = useState([...seatState]);
   const [seats, setSeat] = useState([...bus]);
-  console.log(seatState);
-  // useEffect(() => {
-  //   setBus(_.uniqBy(bus, "seatId"));
-  // }, []);
-  // const removeDuplicates = () => {
-    // const uniques = _.uniqBy(bus, "seatId");
-    // // console.log(uniques, bus);
-    // const diff = _.differenceWith(bus, uniques, _.isEqual);
-    // const diffSeatId = diff.map((i) => i.seatId);
-    // const final = _.uniqBy(
-    //   bus.map((item, index) =>
-    //     diffSeatId.includes(item.seatId)
-    //       ? { ...item, seatType: "sleeper" }
-    //       : { ...item }
-    //   ),
-    //   "seatId"
-    // );
-    // setSeat(final);
-    // setBus(final);
-  // };
 
   useEffect(() => {
     const uniques = _.uniqBy(bus, "seatId");
-    // console.log(uniques, bus);
     const diff = _.differenceWith(bus, uniques, _.isEqual);
     const diffSeatId = diff.map((i) => i.seatId);
     const final = _.uniqBy(
@@ -69,9 +46,8 @@ const SeatLayout = ({ seatState, column, row }) => {
       "seatId"
     );
     setSeat(final);
-    // setBus(final);
     setBus(seatState);
-  }, [seatState,bus]);
+  }, [seatState, bus]);
 
   return (
     <>
@@ -80,7 +56,6 @@ const SeatLayout = ({ seatState, column, row }) => {
           <Seat key={seat.id} seat={seat} />
         ))}
       </Grid>
-      {/* <button onClick={removeDuplicates}>fix me</button> */}
     </>
   );
 };

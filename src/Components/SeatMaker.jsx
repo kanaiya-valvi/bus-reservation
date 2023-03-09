@@ -4,44 +4,141 @@ const SeatMaker = ({ onSeatChange, columns, rows }) => {
   const [row, setRow] = useState(0);
   const [column, setColumn] = useState(0);
   const [seats, setSeats] = useState(null);
+  const [lasetSeats, setlasetSeats] = useState([]);
 
-  // const seatId = seats?.map((seat) => seat.seatId);
-  // console.log(seatId);
+  const selectedSeat = [];
 
-  const changeSeatDetails = (id, seatId) => {
-    const seat = seats.map((list) => {
-      if (list.id == id) {
-        return { ...list, seatId };
+  const uniqueIds = () => {
+    let result = "";
+    const str =
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    for (let i = 0; i < 6; i++) {
+      result += str.charAt(Math.floor(Math.random() * str.length));
+    }
+    return result;
+  };
+
+  const changeSeatDetails = (index, id, seatId, event) => {
+    if (lasetSeats.includes(index + 1) || lasetSeats.includes(index)) {
+      const totalNumberOfSeat = seats.filter((seat) => seat?.seatId === seatId);
+      if (
+        totalNumberOfSeat.length == 0 &&
+        (seats[index - 1]?.seatId !== seatId ||
+          seats[index + 1]?.seatId !== seatId)
+      ) {        
+        if (totalNumberOfSeat.length <= 1) {
+          if (
+            totalNumberOfSeat.length === 1 &&
+            (seats[index + 1]?.seatId === seatId ||
+              seats[index - 1].seatId === seatId)
+          ) {
+            const seat = seats.map((list) => {
+              if (list.id == id) {
+                return { ...list, seatId };
+              } else {
+                return { ...list };
+              }
+            });
+            setSeats(seat);
+            onSeatChange(seat);
+          }
+          if (
+            totalNumberOfSeat.length === 0 &&
+            (seats[index + 1]?.seatId !== seatId ||
+              seats[index - 1].seatId !== seatId)
+          ) {
+            const seat = seats.map((list) => {
+              if (list.id == id) {
+                return { ...list, seatId };
+              } else {
+                return { ...list };
+              }
+            });
+            setSeats(seat);
+            onSeatChange(seat);
+          }
+        } else {
+          alert("Please select unique seatId");
+          event.target.value = "";
+        }
       } else {
-        return { ...list };
+        alert("Please select unique seatId");
+        event.target.value = "";
       }
-    });
-    setSeats(seat);
-    onSeatChange(seat);
+    } else {
+      const totalNumberOfSeat = seats.filter((seat) => seat.seatId === seatId);
+      if (totalNumberOfSeat.length <= 1) {
+        if (
+          totalNumberOfSeat.length === 1 &&
+          (seats[index + 1]?.seatId === seatId ||
+            seats[index - 1]?.seatId === seatId)
+        ) {
+          const seat = seats.map((list) => {
+            if (list.id == id) {
+              return { ...list, seatId };
+            } else {
+              return { ...list };
+            }
+          });
+          setSeats(seat);
+          onSeatChange(seat);
+        }
+        if (
+          totalNumberOfSeat.length === 0 &&
+          (seats[index + 1]?.seatId !== seatId ||
+            seats[index - 1].seatId !== seatId)
+        ) {
+          const seat = seats.map((list) => {
+            if (list.id == id) {
+              return { ...list, seatId };
+            } else {
+              return { ...list };
+            }
+          });
+          setSeats(seat);
+          onSeatChange(seat);
+        }
+      } else {
+        alert("Please select unique seatId");
+        event.target.value = "";
+      }
+    }
   };
 
   const addSeatHandler = () => {
+    for (let i = 1; i <= row; i++) {
+      selectedSeat.push(column * i);
+    }
     const numberOfSeat = row * column;
     columns(column);
     rows(row);
-    const seat = [];
-    for (let i = 0; i < numberOfSeat; i++) {
-      seat.push({ id: i, seatId: "", seatType: "seater" });
-    }
+    const seat = Array.from({ length: numberOfSeat }, (_, i) => ({
+      id: uniqueIds(),
+      seatId: i + "",
+      seatType: "seater",
+    }));
     setSeats(seat);
+    setlasetSeats(selectedSeat);
   };
-  const showSeats = () => {
-    console.log(seats);
-  };
-  let count = 0;
+
   return (
     <div>
       <div>
         <label>columns</label>
-        <input type="number" onChange={(e) => setColumn(e.target.value)} />
+        <input
+          type="number"
+          onChange={(e) => {
+            setColumn(e.target.value);
+          }}
+        />
         <br />
         <label>rows</label>
-        <input type="number" onChange={(e) => setRow(e.target.value)} />
+        <input
+          type="number"
+          onChange={(e) => {
+            setRow(e.target.value);
+          }}
+        />
       </div>
       <button onClick={addSeatHandler}>add seat</button>
       <div
@@ -53,26 +150,19 @@ const SeatMaker = ({ onSeatChange, columns, rows }) => {
           maxWidth: "200px",
         }}>
         {seats !== null &&
-          seats.map((item) => {
-            if (count === parseInt(column)) {
-              count = 1;
-            } else {
-              count = count + 1;
-            }
-            return (
-              <>
-                <input
-                  type="text"
-                  key={item.id}
-                  onChange={(e) => {
-                    changeSeatDetails(item.id, e.target.value);
-                  }}
-                />
-              </>
-            );
-          })}
+          seats.map((item, mov) => (
+            <input
+              type="text"
+              name=""
+              key={mov}
+              value={item.seatId}
+              onChange={(e) => {
+                changeSeatDetails(mov, item.id, e.target.value, e);
+              }}
+            />
+          ))}
       </div>
-      <button onClick={showSeats}>show</button>
+      <button onClick={() => console.log(seats)}>show</button>
     </div>
   );
 };
